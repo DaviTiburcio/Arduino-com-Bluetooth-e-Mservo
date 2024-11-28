@@ -1,65 +1,44 @@
+#include <Servo.h>
 
-int in1 = 7;
-int in2 = 6;
+Servo myservo;
+Servo myservo2;
 
-
-int in3 = 5;
-int in4 = 4;
-
-
-int btnFrente = 2; 
-int btnTras = 3;    
-int btnEsquerda = 4; 
-int btnDireita = 5;
+char incomingData;
 
 void setup() {
+  myservo.attach(9);
+  myservo2.attach(8);
 
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT);
-  pinMode(in4, OUTPUT);
+  Serial.begin(9600); 
 
+  myservo.write(0);
+  myservo2.write(0);
 
-  pinMode(btnFrente, INPUT);
-  pinMode(btnTras, INPUT);
-  pinMode(btnEsquerda, INPUT);
-  pinMode(btnDireita, INPUT);
 }
 
 void loop() {
 
-  if (digitalRead(btnFrente) == HIGH) {
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-    digitalWrite(in3, HIGH);
-    digitalWrite(in4, LOW);
-  }
+  if (Serial.available() > 0) {
+    incomingData = Serial.read(); 
 
-  else if (digitalRead(btnTras) == HIGH) {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-    digitalWrite(in3, LOW);
-    digitalWrite(in4, HIGH);
-  }
 
-  else if (digitalRead(btnEsquerda) == HIGH) {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-    digitalWrite(in3, HIGH);
-    digitalWrite(in4, LOW);
-  }
+    switch (incomingData) {
+      case '1': 
+        myservo.write(150); 
+        break;
 
-  else if (digitalRead(btnDireita) == HIGH) {
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-    digitalWrite(in3, LOW);
-    digitalWrite(in4, HIGH);
-  }
+      case '2': // Comando para o servo 2
+        myservo2.write(30); 
+        break;
 
-  else {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, LOW);
-    digitalWrite(in3, LOW);
-    digitalWrite(in4, LOW);
+      case '0': 
+        myservo.write(90);
+        myservo2.write(90);
+        break;
+
+      default:
+
+        break;
+    }
   }
 }
